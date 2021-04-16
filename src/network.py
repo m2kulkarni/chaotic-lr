@@ -2,6 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import sparse
 from copy import deepcopy
+import configparser
+from .utils import *
+
+# config = configparser.RawConfigParser()
+# config.optionxform = lambda option: option
+# config.read('config.txt')
+# cfg_list = config.items('chaotic')
+# print(cfg_list)
+# # cfg_list = [int(i) for i in cfg_list]
+# details_dict = dict(cfg_list)
+# print(details_dict)
+
+
 
 class EchoState:
     def __init__(self, N_G=N_G, g_GG=g_GG, g_Gz=g_Gz, 
@@ -10,12 +23,13 @@ class EchoState:
 
         self.N_G, self.g_GG, self.g_Gz, self.α = N_G, g_GG, g_Gz, α
         self.p_GG, self.p_z = p_GG, p_z
-        self.Δ, self.dt, self.τ = Δ, dt, τ
+        self.Δt, self.dt, self.τ = Δt, dt, τ
         self.N_output = N_output
         self.f = target_f
-        self.I = I
 
-        self.conditioned_neurons = 10
+        print(self.f)
+        print(self.N_G)
+        self.conditioned_neurons = [10]
 
         self.J_GG = sparse.random(self.N_G, self.N_G, density=self.p_GG,
                 data_rvs=np.random.randn).toarray()*1/np.sqrt(self.p_GG*self.N_G)
@@ -80,9 +94,6 @@ class EchoState:
                 self.dw_list.append((self.time_elapsed, np.linalg.norm(self.dw, axis=0)))
 
                 self.z_list[train_test].append((self.time_elapsed, self.z))
-
-    
-
 
 
         
