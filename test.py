@@ -6,5 +6,6 @@ t_max = 200
 net = network.EchoState()
 
 def target_f():
+    
 
 

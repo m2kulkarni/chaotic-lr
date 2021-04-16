@@ -1,6 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+def normal(x, mu, sigma):
+    normal = 1/(sigma*np.sqrt(2*np.pi))*np.exp(-(x-mu)**2/(2*sigma**2))
+
+    return normal
+
+def two_normals(t, m1=5, m2=100, s1=20, s2=10):
+    return 100*(normal(t, m1, s1) + normal(t, m2, s2))
+
+two_norm = np.vectorize(two_normals)
 
 def periodic(t, amp=3., freq=1/300):
     """Generates a periodic function which a sum of 4 sinusoids.
