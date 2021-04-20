@@ -62,6 +62,7 @@ def triple(f, g, h):
     return (lambda t: np.array([f(t), g(t), h(t)]) if isinstance(t, float) else np.array(list(zip(f(t), g(t), h(t)))))
 per_tri_cos = triple(periodic, triangle, cos_fun)
 
+t_max = 200
 N_G = 1000
 g_GG = 1.5
 g_Gz = 1.
@@ -73,5 +74,4 @@ dt = 0.05
 τ = 5.
 N_output = 1
 target_f = clamp
-I = 0
-
+I = np.zeros((N_G, int(t_max//dt)))

@@ -26,6 +26,7 @@ class EchoState:
         self.Δt, self.dt, self.τ = Δt, dt, τ
         self.N_output = N_output
         self.f = target_f
+        self.I = I
 
         print(self.f)
         print(self.N_G)
@@ -45,6 +46,8 @@ class EchoState:
 
         self.J_GG_initial = deepcopy(self.J_GG)
         self.J_Gz_initial = deepcopy(self.J_Gz)
+
+        self._init_variables()
         
     def _init_variables(self):
 
@@ -66,7 +69,7 @@ class EchoState:
     def step(self, train_test='train', store=True):
 
         dt, Δt, τ, g_GG, g_Gz = self.dt, self.Δt, self.τ, self.g_GG, self.g_Gz
-
+        # print(self.x)
         self.dx = 1/τ*(-self.x + g_GG*np.dot(self.J_GG, self.r) + \
             g_Gz*np.dot(self.J_Gz, self.z) + np.dot(self.J_GI, self.I[:, int(self.time_elapsed/dt)]))
         
@@ -86,7 +89,7 @@ class EchoState:
 
                 self.e_minus = self.z - self.f(self.time_elapsed)
 
-                self.dw = np.outer(np.dot(P, self.r), self.e_minus)
+                self.dw = np.outer(np.dot(self.P, self.r), self.e_minus)
                 self.w -= self.dw
             
             if store:
