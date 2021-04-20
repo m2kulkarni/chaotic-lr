@@ -62,8 +62,16 @@ def triple(f, g, h):
     return (lambda t: np.array([f(t), g(t), h(t)]) if isinstance(t, float) else np.array(list(zip(f(t), g(t), h(t)))))
 per_tri_cos = triple(periodic, triangle, cos_fun)
 
+def get_input_current():
+    I = np.zeros((N_G, int(t_max//dt)))
+    I[:, :5] = 1.
+
+    return I
+
+
+
 t_max = 200
-N_G = 1000
+N_G = 200
 g_GG = 1.5
 g_Gz = 1.
 p_GG = 0.1 
@@ -74,4 +82,4 @@ dt = 0.05
 τ = 5.
 N_output = 1
 target_f = clamp
-I = np.zeros((N_G, int(t_max//dt)))
+I = get_input_current()

@@ -22,14 +22,20 @@ two_norm = np.vectorize(two_normals)
 net = network.EchoState(target_f=two_norm)
 
 ## Start Training phase
-
+change_list = ['J', 'w']
 for i in range(int(t_max//dt)):
 
-    net.step()
+    net.step(change=change_list)
 
 # z_list = np.asarray(net.z_list['train'])
 # print(z_list.shape)
 
-plt.plot(ts_train, two_norm(ts_train))
-plt.plot(*zip(*net.z_list['train']))
+plt.plot(ts_train, two_norm(ts_train), label='Target Function')
+plt.plot(*zip(*net.z_list['train']), label='$z$')
+
+if 'w' in change_list:
+    plt.plot(*zip(*net.dw_list), label='$|dw|$')
+if 'J' in change_list:
+    plt.plot(*zip(*net.dJ_list), label='$|dJ|$')
+plt.legend()
 plt.show()
