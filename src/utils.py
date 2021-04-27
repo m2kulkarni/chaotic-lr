@@ -82,4 +82,5 @@ dt = 0.05
 τ = 5.
 N_output = 1
 target_f = clamp
-I = get_input_current()
+# I = get_input_current()
+I = np.zeros((N_G, int(t_max//dt)))

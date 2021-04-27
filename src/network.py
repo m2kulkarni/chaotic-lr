@@ -88,15 +88,19 @@ class EchoState:
                 Pr = np.dot(self.P, self.r)
                 self.P -= np.outer(Pr, self.r).dot(self.P)/(1+np.dot(self.r, Pr))
                 self.e_minus = self.z - self.f(self.time_elapsed)
-                
+                self.dw = np.outer(np.dot(self.P, self.r), self.e_minus)
+
                 ## Changing w
                 if 'w' in change:
-                    self.dw = np.outer(np.dot(self.P, self.r), self.e_minus)
                     self.w -= self.dw
+
+                if 'u' in change:
+                    self.J_Gz -= self.dw
 
                 ## Changing J_GG
                 if 'J' in change:
-                    self.J_GG += np.tile(self.dw.T, (self.N_G, 1))
+                    # self.J_GG -= np.tile(self.dw.T, (self.N_G, 1))
+                    self.J_GG += np.outer(self.J_Gz, self.w.T)
 
             self.w_list.append((self.time_elapsed, np.linalg.norm(self.w, axis=0)))
             self.dw_list.append((self.time_elapsed, np.linalg.norm(self.dw/Δt, axis=0)))

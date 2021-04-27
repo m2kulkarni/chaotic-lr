@@ -15,14 +15,14 @@ def normal(x, mu, sigma):
     return normal
 
 def two_normals(t, m1=25, m2=100, s1=20, s2=10):
-    return 100*(normal(t, m1, s1) + normal(t, m2, s2))
+    return 10*(normal(t, m1, s1) + normal(t, m2, s2))
 
 two_norm = np.vectorize(two_normals)
 
 net = network.EchoState(target_f=two_norm)
 
 ## Start Training phase
-change_list = ['J', 'w']
+change_list = ['J', 'u', 'w']
 for i in range(int(t_max//dt)):
 
     net.step(change=change_list)
