@@ -22,7 +22,7 @@ two_norm = np.vectorize(two_normals)
 net = network.EchoState(target_f=two_norm)
 
 ## Start Training phase
-change_list = ['J', 'u', 'w']
+change_list = ['u', 'J', 'w']
 for i in range(int(t_max//dt)):
 
     net.step(change=change_list)
@@ -39,3 +39,40 @@ if 'J' in change_list:
     plt.plot(*zip(*net.dJ_list), label='$|dJ|$')
 plt.legend()
 plt.show()
+
+def check_symmetric(a, tol=1e-8):
+    return np.all(np.abs(a-a.T) < tol)
+
+def plot_histogram(net):
+    rates_ini = np.tanh(net.x_initial)
+    rates_fin = np.tanh(net.x)
+    rates = np.vstack([rates_fin, rates_ini ])
+    plt.hist(rates.T, bins=20, histtype='barstacked')
+#    plt.hist(rates_fin)
+    print(rates)
+    plt.show()
+
+def plot_J(net):
+    J_ini = net.J_GG_initial
+    scale = np.sqrt(np.sum(J_ini**2))
+    J_ini = J_ini/scale
+    J_fin = net.J_GG/scale
+    #J_fin = J_fin/np.max(J_fin)
+#    J = np.vstack([J_ini, J_fin])
+    fig, (ax1, ax2) = plt.subplots(ncols=2)
+    print(J_ini[net.conditioned_neurons])
+    print(J_fin[net.conditioned_neurons])
+    im1 = ax1.imshow(J_ini[net.conditioned_neurons].T, aspect='auto')
+    im2 = ax2.imshow(J_fin[net.conditioned_neurons].T, aspect='auto')
+    fig.colorbar(im2, ax=ax2 )
+    fig.colorbar(im1, ax=ax1 )
+    plt.show()
+
+    print(np.sum(J_ini))
+    print(np.sum(J_fin))
+#    plt.hist(J_fin[net.conditioned_neurons[:1]].T, histtype='barstacked')
+#    plt.hist(J_ini[net.conditioned_neurons[:1]].T, histtype='barstacked')
+#    plt.show()
+
+#plot_histogram(net)
+plot_J(net)
