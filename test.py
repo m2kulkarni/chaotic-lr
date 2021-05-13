@@ -22,7 +22,7 @@ two_norm = np.vectorize(two_normals)
 net = network.EchoState(target_f=two_norm)
 
 ## Start Training phase
-change_list = ['u', 'J', 'w']
+change_list = ['J', 'w']
 for i in range(int(t_max//dt)):
 
     net.step(change=change_list)
@@ -55,8 +55,8 @@ def plot_histogram(net):
 def plot_J(net):
     J_ini = net.J_GG_initial
     scale = np.sqrt(np.sum(J_ini**2))
-    J_ini = J_ini/scale
-    J_fin = net.J_GG/scale
+    J_fin = net.J_GG
+    J_times = np.divide(J_fin, J_ini)
     #J_fin = J_fin/np.max(J_fin)
 #    J = np.vstack([J_ini, J_fin])
     fig, (ax1, ax2) = plt.subplots(ncols=2)
@@ -64,8 +64,10 @@ def plot_J(net):
     print(J_fin[net.conditioned_neurons])
     im1 = ax1.imshow(J_ini[net.conditioned_neurons].T, aspect='auto')
     im2 = ax2.imshow(J_fin[net.conditioned_neurons].T, aspect='auto')
+#    im3 = ax3.imshow(J_times[net.conditioned_neurons].T, aspect='auto')
     fig.colorbar(im2, ax=ax2 )
     fig.colorbar(im1, ax=ax1 )
+#    fig.colorbar(im3, ax=ax3)
     plt.show()
 
     print(np.sum(J_ini))
@@ -74,5 +76,5 @@ def plot_J(net):
 #    plt.hist(J_ini[net.conditioned_neurons[:1]].T, histtype='barstacked')
 #    plt.show()
 
-#plot_histogram(net)
+plot_histogram(net)
 plot_J(net)

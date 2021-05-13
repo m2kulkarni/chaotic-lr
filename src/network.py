@@ -35,7 +35,7 @@ class EchoState:
 
         self.J_GG = sparse.random(self.N_G, self.N_G, density=self.p_GG,
                 data_rvs=np.random.randn).toarray()*1/np.sqrt(self.p_GG*self.N_G)
-        np.fill_diagonal(self.J_GG, 1e-8)
+        np.fill_diagonal(self.J_GG, 0)
 
         self.J_Gz = np.random.randn(self.N_G, self.N_output)
         # for cneuron in self.conditioned_neurons:
@@ -106,7 +106,7 @@ class EchoState:
                 if 'J' in change:
                     # self.J_GG -= np.tile(self.dw.T, (self.N_G, 1))
                     self.J_GG += np.outer(self.J_Gz, self.w.T)
-                    np.fill_diagonal(self.J_GG, 1e-8)
+                    np.fill_diagonal(self.J_GG, 0)
 
             self.w_list.append((self.time_elapsed, np.linalg.norm(self.w, axis=0)))
             self.dw_list.append((self.time_elapsed, np.linalg.norm(self.dw/Δt, axis=0)))
